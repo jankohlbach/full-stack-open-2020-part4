@@ -19,8 +19,34 @@ const favoriteBlog = (blogs) => {
   , {});
 };
 
+const mostBlogs = (blogs) => {
+  if(blogs.length === 0) return null;
+
+  if(blogs.length === 1) return {author: blogs[0].author, blogs: 1};
+
+  let result = {};
+  blogs.map(({author}) => {
+    result = {
+      ...result,
+      [author]: result[author] + 1 || 1,
+    };
+  });
+
+  return Object.entries(result).reduce((prev, curr) => prev[1] > curr[1]
+    ? {
+      author: prev[0],
+      blogs: prev[1],
+    }
+    : {
+      author: curr[0],
+      blogs: curr[1],
+    }
+  );
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
