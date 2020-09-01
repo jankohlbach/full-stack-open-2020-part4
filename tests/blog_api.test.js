@@ -107,6 +107,25 @@ test('status code 204 when deleting with valid id', async () => {
   expect(contents).not.toContain(blogToDelete.title);
 });
 
+test('blog property is successfully updated', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send({
+      ...blogToUpdate,
+      title: 'Test title',
+    })
+    .expect(200);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+  const contents = blogsAtEnd.map(blog => blog.title);
+  expect(contents).toContain('Test title');
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
