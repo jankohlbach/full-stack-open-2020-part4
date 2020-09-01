@@ -54,6 +54,20 @@ test('new blog can be added', async () => {
   expect(contents).toContain('Test Blog for POST');
 });
 
+test('missing like property should default to 0', async () => {
+  const newBlog = {
+    title: 'Test Blog for POST',
+    author: 'Dude',
+    url: 'https://test.com',
+  };
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog);
+
+  expect(response.body.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
