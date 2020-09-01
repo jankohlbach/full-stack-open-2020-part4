@@ -33,6 +33,27 @@ test('unique identifier is named id', async () => {
   expect(response.body[0].id).toBeDefined();
 });
 
+test('new blog can be added', async () => {
+  const newBlog = {
+    title: 'Test Blog for POST',
+    author: 'Dude',
+    url: 'https://test.com',
+    likes: 5,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('content-type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const contents = blogsAtEnd.map(blog => blog.title);
+  expect(contents).toContain('Test Blog for POST');
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
