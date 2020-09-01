@@ -68,6 +68,30 @@ test('missing like property should default to 0', async () => {
   expect(response.body.likes).toBe(0);
 });
 
+test('missing title and url properties should resond with 400 Bad Request', async () => {
+  const newBlogNoTitle = {
+    author: 'Me',
+    url: 'https://test.com',
+    likes: 23,
+  };
+
+  const newBlogNoUrl = {
+    author: 'Me',
+    url: 'https://test.com',
+    likes: 23,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlogNoTitle)
+    .expect(400);
+
+  await api
+    .post('/api/blogs')
+    .send(newBlogNoUrl)
+    .expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
