@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const supertest = require('supertest');
 const bcrypt = require('bcrypt');
 const helper = require('./test_helper');
@@ -82,5 +83,9 @@ test('new user can be added', async () => {
   expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
 
   const users = usersAtEnd.map(user => user.username);
-  expect(users).toContain('jan');
+  expect(users).toContain('testuser');
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });
